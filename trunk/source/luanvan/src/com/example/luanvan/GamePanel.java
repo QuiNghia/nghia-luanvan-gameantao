@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.example.luanvan.element.MyView;
+import com.example.luanvan.element.Sound;
 import com.example.luanvan.element.ViewPanel;
 import com.example.luanvan.game.Game;
 import com.example.luanvan.mainmenu.MainMenu;
@@ -12,6 +13,7 @@ import com.example.luanvan.mainmenu.MainMenu;
 public class GamePanel extends ViewPanel{
 
 	MyView view;
+	public static Sound sound;
 	
 	public GamePanel(Context context) {
 		super(context);
@@ -21,12 +23,14 @@ public class GamePanel extends ViewPanel{
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		// TODO Auto-generated method stub
-		//view.surfaceChanged(holder, format, width, height);
+		view.surfaceChanged(holder, format, width, height);
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
+		sound = new Sound(getContext());
+		sound.playMusicBackground(true);
 		view = new MainMenu(this);
 		view.surfaceCreated(holder);
 	}
@@ -34,6 +38,7 @@ public class GamePanel extends ViewPanel{
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
+		
 		view.surfaceDestroyed(holder);
 	}
 

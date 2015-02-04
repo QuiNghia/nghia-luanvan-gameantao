@@ -4,9 +4,15 @@ import java.util.ArrayList;
 
 import com.example.luanvan.GamePanel;
 import com.example.luanvan.GamePlayActivity;
+import com.example.luanvan.element.BoundElement;
+import com.example.luanvan.element.Flower;
+import com.example.luanvan.element.LocationElement;
 import com.example.luanvan.element.MyView;
+import com.example.luanvan.element.SizeElement;
+import com.example.luanvan.element.Sound;
+import com.example.luanvan.element.Theme;
 import com.example.luanvan.element.ViewPanel;
-import com.example.luanvan.game.Flower.StateFlower;
+import com.example.luanvan.element.Flower.StateFlower;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,24 +20,23 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.hardware.Camera.Size;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.Toast;
 
 
 public class Game extends MyView{
 
 	int fps = 20; // so khung hinh tren giay
-	float height = 300 , width = 300;
-	int slHang = 5, slCot = 8,tyleSau = 5;
+	BoundElement boMaxMT,boMtFlower;
+	int slHang = 6, slCot = 8,tyleSau = 15;
 	float padding = 3;
-	float sizeCell;
-	PointF pointWrap; 
+	float sizeCell; 
 	Thread thrDraw;
 	Theme theme;
 	GameData gameData;
@@ -56,13 +61,15 @@ public class Game extends MyView{
 
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
-		pointWrap = new PointF(10,50);
+		// TODO Auto-generated method stub]
+		
+		
+		
 		
 		gameData = new GameData();
 		gameData.createNew(slHang, slCot, tyleSau);
 		sound = new Sound(getContext());
-		
+		setBoundFlower();
 //		theme = new Theme(1,this); ------------
 		theme = new Theme(1,getView());
 		thrDraw = new Thread(new Runnable() {
@@ -89,6 +96,7 @@ public class Game extends MyView{
 		thrDraw.start();
 		addEvent();
 		
+		
 	}
 
 	@Override
@@ -113,6 +121,7 @@ public class Game extends MyView{
 		
 		DrawBackground(c);
 		DrawMatrixFlower(c);
+		DrawInfomation(c);
 	}
 	
 	// ve hinh nen
@@ -129,19 +138,12 @@ public class Game extends MyView{
 	
 	public void DrawMatrixFlower(Canvas c){
 		
-		float hCell = height/slHang;
-		float wCell = width/slCot;
-		sizeCell = wCell < hCell ? wCell : hCell;
-		float h = slHang*sizeCell;
-		float w = slCot*sizeCell;
-		PointF po = new PointF();
 		float sizeImg = sizeCell - 2*padding;
 		Paint paint = new Paint();
 		
-		pointWrap.set(10 + (width-w)/2, 50 + (height-h)/2);
 		
 		// ve nen cho flower
-		drawBackgroundFlower(c, pointWrap, sizeCell, (sizeCell-sizeImg)/2);
+		drawBackgroundFlower(c, (sizeCell-sizeImg)/2);
 		
 		//set size image
 		if(theme.getBmFlower().getWidth() != sizeImg ){
@@ -155,10 +157,12 @@ public class Game extends MyView{
 		}
 		// draw flower
 		Bitmap bm;
+		Point po = new Point();
 		for(int i = 0 ; i < slHang ; i++){
 			for(int j = 0 ; j < slCot ; j++){
 				
-				po.set(j*sizeCell + pointWrap.x + padding, i*sizeCell + pointWrap.y + padding);
+				po.set((int)(gameData.getFlowerAt(i, j).getBound().getLocationX() + padding)
+						,(int)(gameData.getFlowerAt(i, j).getBound().getLocationY() + padding) );
 			
 				if(gameData.getFlowerAt(i, j).getState() == StateFlower.CLOSE)
 					bm = theme.getBmFlower();
@@ -171,12 +175,12 @@ public class Game extends MyView{
 				c.drawBitmap(bm, po.x,  po.y,paint);
 			}
 		}
-		
+		paint.setColor(Color.BLUE);
 	}
 	
-	public void drawBackgroundFlower(Canvas c,PointF p, float sizeCell, float padding){
-		PointF po = new PointF();
-		float sizeImg = sizeCell - 2*padding;
+	public void drawBackgroundFlower(Canvas c, float padding){
+		PointF pdraw = new PointF();
+		BoundElement bound;
 		Paint pVien = new Paint();
 		pVien.setStyle(Paint.Style.STROKE);
 		pVien.setColor(Color.WHITE);
@@ -185,11 +189,52 @@ public class Game extends MyView{
 		
 		for(int i = 0 ; i < slHang ; i++){
 			for(int j = 0 ; j < slCot ; j++){
-				po.set(j*sizeCell + p.x + padding, i*sizeCell + p.y + padding);
-				c.drawRect(po.x,po.y,po.x+sizeImg,po.y+sizeImg, pVien);
+				bound = gameData.getFlowerAt(i, j).getBound();
+				
+				c.drawRect(bound.getLocationX() + padding,bound.getLocationY() + padding
+						,bound.getLocationX() + bound.getWidth() - padding
+						,bound.getLocationY() + bound.getHeight() - padding, pVien);
 			}
 		}
 		
+	}
+	
+	public void setBoundFlower(){
+		boMaxMT = new BoundElement();
+		boMtFlower = new BoundElement();
+		boMaxMT.getSize().setWidth( getWidth() - 20 );
+		boMaxMT.getSize().setHeight( getHeight()/2 );
+		boMaxMT.getLocation().set( (getWidth() - boMaxMT.getWidth() )/2
+				, (getHeight() - boMaxMT.getHeight())/2);
+		
+		float hCell = boMaxMT.getHeight()/slHang;
+		float wCell = boMaxMT.getWidth()/slCot;
+		sizeCell = wCell < hCell ? wCell : hCell;
+		boMtFlower.setSize(new SizeElement(slCot*sizeCell, slHang*sizeCell));
+		boMtFlower.setLocation(new LocationElement( 
+				(boMaxMT.getWidth()-boMtFlower.getWidth())/2 + boMaxMT.getLocationX()
+				,(boMaxMT.getHeight() - boMtFlower.getHeight())/2 + boMaxMT.getLocationY()) );
+		//set element of matrix
+		BoundElement b = new BoundElement();
+		float x,y;
+		for(int i = 0 ; i < slHang ; i ++){
+			for(int j = 0 ; j < slCot ; j ++){
+				x = j*sizeCell + boMtFlower.getLocationX();
+				y = i*sizeCell + boMtFlower.getLocationY();
+				gameData.getFlowerAt(i, j).setBound(new BoundElement(x, y, sizeCell, sizeCell));
+			}
+		}
+		
+	}
+	public void DrawInfomation(Canvas c){
+		Paint paint = new Paint();
+		paint.setColor(Color.WHITE);
+		paint.setStyle(Style.FILL);
+		paint.setColor(Color.BLUE);
+		paint.setTextSize(20);
+		
+		LocationElement loCost = new LocationElement(30,30);
+		c.drawText("SCOST: " + gameData.getCost(), loCost.x, loCost.y, paint);
 	}
 	
 	public void addEvent(){
@@ -202,11 +247,14 @@ public class Game extends MyView{
 				switch(me){
 					case MotionEvent.ACTION_DOWN:{
 						PointF pClick = new PointF(event.getX(),event.getY());
-						if(pClick.x >= pointWrap.x && pClick.x <= (pointWrap.x+width) 
-								&& pClick.y >= pointWrap.y && pClick.y <= (pointWrap.y+height)){
+						Point local = getLocationAtCooridate(pClick.x, pClick.y);// lay vi tri bong hoa
+						if(local != null){
 							
-							Point local = getLocationAtCooridate(pClick.x, pClick.y);// lay vi tri bong hoa
+							
+							//Toast.makeText(getContext(), local.toString(), Toast.LENGTH_LONG).show();
+							
 							Flower flower = gameData.getFlowerAt(local.y, local.x); // lay bong hoa o vi tri local
+							
 							if(flower.isClose()){
 								ArrayList<Point> lsFlower = gameData.takeHoneyAt(local.y, local.x);
 								
@@ -225,6 +273,7 @@ public class Game extends MyView{
 							}else{
 								
 							}
+							
 						}
 						break;
 					}
@@ -235,14 +284,14 @@ public class Game extends MyView{
 	}
 	// ham lay vi tri cua bong hoa khi truyen vào toa do thuc
 	public Point getLocationAtCooridate(float x, float y){
-		x -= pointWrap.x;
-		y -= pointWrap.y;
-		Point p = new Point();
-		if(x < 0 || y < 0 || x > slCot*sizeCell || y > slHang*sizeCell)
-			return null;
-		p.set( (int)(x/sizeCell) , (int)(y/sizeCell) );
+		for(int i = 0 ; i < slHang ; i ++)
+			for(int j = 0 ; j < slCot ; j++){
+				if(gameData.getFlowerAt(i, j).getBound().checkPointIn(x, y)){
+					return new Point(j,i);
+				}
+			}
 		
-		return p;
+		return null;
 	}
 	
 	public void actionVictory(){

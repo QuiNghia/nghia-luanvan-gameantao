@@ -7,7 +7,8 @@ import java.util.Vector;
 
 import android.graphics.Point;
 
-import com.example.luanvan.game.Flower.StateFlower;
+import com.example.luanvan.element.Flower;
+import com.example.luanvan.element.Flower.StateFlower;
 
 
 
@@ -160,7 +161,7 @@ public class GameData {
 	
 	public ArrayList<Point> takeHoneyAt(int row, int col){
 		if(getFlowerAt(row, col).isOpen()) return null;
-		ArrayList lsPoint = new ArrayList<Point>();
+		ArrayList<Point> lsPoint = new ArrayList<Point>();
 		
 		
 		if(getFlowerAt(row, col).hasNotHoney()){
@@ -177,6 +178,14 @@ public class GameData {
 		}
 		DFS(row,col,lsPoint);
 		step = null;
+		//update scost
+		int len =  lsPoint.size() ;
+		Flower fl;
+		for(int i = 0 ; i <len; i++){
+			fl = getFlowerAt(lsPoint.get(i).y, lsPoint.get(i).x);
+			if(fl.hasHoney())
+				cost++;
+		}
 		//kt lai coi thang chua
 		int cnt = 0;
 		for(int i = 0 ; i < numRow ; i ++)
@@ -192,7 +201,7 @@ public class GameData {
 	
 	void DFS(int row, int col, ArrayList<Point> ls){
 		if(getFlowerAt(row, col).hasNotHoney()) return;
-		ls.add(new Point(row,col));
+		ls.add(new Point(col,row));
 		step[row][col] = StateStep.VISITTED;
 		matrixFlower[row][col].setState(StateFlower.OPEN);
 		

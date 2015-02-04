@@ -6,6 +6,7 @@ import com.example.luanvan.MainActivity;
 import com.example.luanvan.R;
 import com.example.luanvan.element.BoundElement;
 import com.example.luanvan.element.MyView;
+import com.example.luanvan.element.Sound;
 import com.example.luanvan.element.ViewPanel;
 import com.example.luanvan.game.Game;
 
@@ -20,6 +21,9 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainMenu extends MyView{
@@ -43,11 +47,14 @@ public class MainMenu extends MyView{
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {}
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		
+	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
+		
 		running = true;
 		cntBee = 0;
 		setBoundElement();
@@ -85,7 +92,6 @@ public class MainMenu extends MyView{
 			running = false;
 			//((Activity)getContext()).finish();
 		}
-			
 	}
 
 	@Override
@@ -108,6 +114,7 @@ public class MainMenu extends MyView{
 		c.drawBitmap(bmBtnSetting, boBtnSetting.getLocationX(), boBtnSetting.getLocationY(), p);
 		c.drawBitmap(bmBtnStart, boBtnStart.getLocationX(), boBtnStart.getLocationY(), p);
 		c.drawBitmap(bmBtnSync, boBtnSync.getLocationX(), boBtnSync.getLocationY(), p);
+		
 	}
 	
 	public void drawBee(Canvas c){
@@ -188,7 +195,7 @@ public class MainMenu extends MyView{
 				if(boBtnExit.checkPointIn(x, y)){
 					//thoat
 					//updateThread.setRunning(false);
-					//((Activity)getContext()).finish();
+					((Activity) getContext()).finish();
 				}
 				else if(boBtnHelp.checkPointIn(x, y)){
 					// tro giup
@@ -198,7 +205,7 @@ public class MainMenu extends MyView{
 				}
 				else if(boBtnStart.checkPointIn(x, y)){
 					//bat dau choi
-					
+					hieuUngChange();
 //					Intent i = new Intent(getContext(), GamePlayActivity.class);
 //					getContext().startActivity(i);
 					//((Activity)getContext()).finish();
@@ -212,8 +219,25 @@ public class MainMenu extends MyView{
 			}
 		});
 	
+		
 	}
-
+	public void hieuUngChange(){
+		float speedX = getWidth()/20;
+		float speedY = getHeight()/20;
+		int timewait = 1000/fps;
+		for(int i = 0 ; i < 20 ; i ++){
+			boBee.setLocationY(boBee.getLocationY() - speedY);
+			boBtnStart.setLocationX(boBtnStart.getLocationX() + speedX);
+			boBtnExit.setLocationX(boBtnExit.getLocationX() + speedX);
+			boBtnHelp.setLocationX(boBtnHelp.getLocationX() - speedX);
+			boBtnSetting.setLocationX(boBtnSetting.getLocationX() + speedX);
+			boBtnSync.setLocationY(boBtnSync.getLocationY() - speedY);
+			try {
+				Thread.sleep(timewait);
+			} catch (InterruptedException e) {}
+		}
+	}
+	
 	
 }
 

@@ -2,8 +2,8 @@ package com.example.luanvan.element;
 
 public class BoundElement {
 
-	LocationElement location;
-	SizeElement size;
+	LocationElement location = new LocationElement();
+	SizeElement size = new SizeElement();
 
 	public BoundElement() {
 		// TODO Auto-generated constructor stub
@@ -52,8 +52,22 @@ public class BoundElement {
 		return size.getHeight();
 	}
 	
+	public void setLocationX(float x){
+		location.set(x, location.y);
+	}
+	public void setLocationY(float y){
+		location.set(location.x, y);
+	}
+	
 	public boolean checkPointIn(float x, float y){
 		return x>= location.x && x<= (location.x + size.width) 
 				&& y >= location.y && y <= (location.y + size.height);
 	}
+
+	@Override
+	public String toString() {
+		return "BoundElement [" + location.x+","+location.y+","+size.width+","+size.height + "]";
+	}
+	
+	
 }
