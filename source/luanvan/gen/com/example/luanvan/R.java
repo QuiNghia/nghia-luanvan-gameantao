@@ -59,6 +59,7 @@ public final class R {
         public static final int num7=0x7f020022;
         public static final int num8=0x7f020023;
         public static final int num9=0x7f020024;
+        public static final int sound_background=0x7f020025;
     }
     public static final class id {
         public static final int action_settings=0x7f080001;

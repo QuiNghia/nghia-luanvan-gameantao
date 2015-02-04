@@ -16,4 +16,8 @@ public class LocationElement extends PointF{
 	public LocationElement(Point p){
 		super(p);
 	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 }
