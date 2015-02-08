@@ -59,7 +59,15 @@ public final class R {
         public static final int num7=0x7f020022;
         public static final int num8=0x7f020023;
         public static final int num9=0x7f020024;
-        public static final int sound_background=0x7f020025;
+        public static final int setting_background=0x7f020025;
+        public static final int setting_background_color=0x7f020026;
+        public static final int setting_button_back=0x7f020027;
+        public static final int setting_button_save=0x7f020028;
+        public static final int setting_radio_off=0x7f020029;
+        public static final int setting_radio_on=0x7f02002a;
+        public static final int setting_slider=0x7f02002b;
+        public static final int setting_slider_scroll=0x7f02002c;
+        public static final int sound_background=0x7f02002d;
     }
     public static final class id {
         public static final int action_settings=0x7f080001;

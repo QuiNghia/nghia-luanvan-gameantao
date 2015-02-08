@@ -8,6 +8,7 @@ import com.example.luanvan.element.BoundElement;
 import com.example.luanvan.element.Flower;
 import com.example.luanvan.element.LocationElement;
 import com.example.luanvan.element.MyView;
+import com.example.luanvan.element.OptionConfig;
 import com.example.luanvan.element.SizeElement;
 import com.example.luanvan.element.Sound;
 import com.example.luanvan.element.Theme;
@@ -40,7 +41,6 @@ public class Game extends MyView{
 	Thread thrDraw;
 	Theme theme;
 	GameData gameData;
-	Sound sound;
 	public boolean running = true;
 	
 
@@ -64,11 +64,13 @@ public class Game extends MyView{
 		// TODO Auto-generated method stub]
 		
 		
+		slHang = OptionConfig.myConfig.getRow();
+		slCot = OptionConfig.myConfig.getColunm();
+		tyleSau = 100 - OptionConfig.myConfig.getPerHoney();
 		
 		
 		gameData = new GameData();
 		gameData.createNew(slHang, slCot, tyleSau);
-		sound = new Sound(getContext());
 		setBoundFlower();
 //		theme = new Theme(1,this); ------------
 		theme = new Theme(1,getView());
@@ -94,7 +96,7 @@ public class Game extends MyView{
 			}
 		});
 		thrDraw.start();
-		addEvent();
+		setEvent();
 		
 		
 	}
@@ -234,10 +236,10 @@ public class Game extends MyView{
 		paint.setTextSize(20);
 		
 		LocationElement loCost = new LocationElement(30,30);
-		c.drawText("SCOST: " + gameData.getCost(), loCost.x, loCost.y, paint);
+		c.drawText("COST: " + gameData.getCost(), loCost.x, loCost.y, paint);
 	}
 	
-	public void addEvent(){
+	public void setEvent(){
 		getView().setOnTouchListener(new View.OnTouchListener() {
 			
 			@Override
@@ -260,7 +262,7 @@ public class Game extends MyView{
 								
 								if(lsFlower != null && !lsFlower.isEmpty()){
 									//xu li khi mo thanh cong
-									sound.playGetHoney();
+									Sound.mySound.playGetHoney();
 									
 									
 								}else{
