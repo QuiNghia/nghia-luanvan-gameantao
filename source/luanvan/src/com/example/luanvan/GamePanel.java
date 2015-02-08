@@ -13,7 +13,6 @@ import com.example.luanvan.mainmenu.MainMenu;
 public class GamePanel extends ViewPanel{
 
 	MyView view;
-	public static Sound sound;
 	
 	public GamePanel(Context context) {
 		super(context);
@@ -29,8 +28,8 @@ public class GamePanel extends ViewPanel{
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
-		sound = new Sound(getContext());
-		sound.playMusicBackground(true);
+		Sound.mySound = new Sound(getContext());
+		Sound.mySound .playMusicBackground(true);
 		view = new MainMenu(this);
 		view.surfaceCreated(holder);
 	}
@@ -38,8 +37,11 @@ public class GamePanel extends ViewPanel{
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
-		
+		if(view instanceof MainMenu){
+			Sound.mySound.destroy();
+		}
 		view.surfaceDestroyed(holder);
+		
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class GamePanel extends ViewPanel{
 
 	public void startPanelGame(){
 		if(view != null)
-			surfaceDestroyed(getHolder());
+			view.surfaceDestroyed(getHolder());
 		
 		view = new Game(this);
 		view.surfaceCreated(getHolder());
@@ -63,5 +65,6 @@ public class GamePanel extends ViewPanel{
 		view = new MainMenu(this);
 		view.surfaceCreated(getHolder());
 	}
+	
 
 }

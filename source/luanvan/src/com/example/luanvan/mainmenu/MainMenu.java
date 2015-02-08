@@ -28,10 +28,12 @@ import android.widget.Toast;
 
 public class MainMenu extends MyView{
 
+	MainMenu myMainMenu;
 	BoundElement boBtnStart, boBtnExit, boBtnSetting, boBtnHelp, boBtnSync, boBee;
 	Thread thrDraw;
 	Bitmap bmBackground, bmBtnStart,bmBtnExit, bmBtnSetting, bmBtnHelp, bmBtnSync;
 	Bitmap bmBee[];
+	GameOption gameOption;
 	int fps = 20, timeDelay; 
 	float width, height;
 	boolean running;
@@ -44,6 +46,7 @@ public class MainMenu extends MyView{
 
 	public MainMenu(ViewPanel view) {
 		super(view);
+		myMainMenu = this;
 	}
 
 	@Override
@@ -60,6 +63,8 @@ public class MainMenu extends MyView{
 		setBoundElement();
 		loadBitmap();
 		setEvent();
+		gameOption = new GameOption(this);
+		gameOption.onCreated();
 		thrDraw = new Thread(new Runnable() {
 			
 			@Override
@@ -100,6 +105,8 @@ public class MainMenu extends MyView{
 		drawBackground(c);
 		drawButton(c);
 		drawBee(c);
+		if(gameOption != null && gameOption.isShow())
+			gameOption.doDraw(c);
 	}
 	
 	public void drawBackground(Canvas c){
@@ -191,17 +198,30 @@ public class MainMenu extends MyView{
 					return false;
 				float x = event.getX();
 				float y = event.getY();
+				boolean kt = true;
 				
 				if(boBtnExit.checkPointIn(x, y)){
 					//thoat
 					//updateThread.setRunning(false);
-					((Activity) getContext()).finish();
+					surfaceDestroyed(getHolder());
+					//Sound.mySound.destroy();
+					System.exit(0);
+					//((Activity) getContext()).finish();
 				}
 				else if(boBtnHelp.checkPointIn(x, y)){
 					// tro giup
 				}
 				else if(boBtnSetting.checkPointIn(x, y)){
 					//cai dat
+					if(gameOption == null){
+						gameOption = new GameOption(myMainMenu);
+						gameOption.onCreated();
+					}
+					if( gameOption.isShow())
+						gameOption.setShow(false);
+					else{
+						gameOption.setShow(true);
+					}
 				}
 				else if(boBtnStart.checkPointIn(x, y)){
 					//bat dau choi
@@ -214,6 +234,10 @@ public class MainMenu extends MyView{
 				else if(boBtnSync.checkPointIn(x, y)){
 					//dang nhap
 				}
+				else kt = false;
+				
+				if(kt)
+					Sound.mySound.playMusicButton();
 				
 				return true;
 			}

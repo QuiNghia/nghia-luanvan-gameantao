@@ -18,6 +18,7 @@ public abstract class MyView {
 	public abstract void surfaceChanged(SurfaceHolder holder, int format, int width,int height);
 	public abstract void surfaceCreated(SurfaceHolder holder);
 	public abstract void surfaceDestroyed(SurfaceHolder holder);
+	public abstract void setEvent();
 	
 	public ViewPanel getView() {
 		return view;
