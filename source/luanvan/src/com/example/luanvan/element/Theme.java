@@ -17,6 +17,9 @@ public class Theme {
 	private Bitmap bmNoHoney;
 	private Bitmap bmBackground;
 	private Bitmap bmNumber[];
+	private Bitmap bmBgCost;
+	private Bitmap bmButtonMenu;
+	private Bitmap bmButtonHelp;
 	View view;
 	
 	public Theme() {
@@ -44,6 +47,10 @@ public class Theme {
 			bmHoney = BitmapFactory.decodeResource(view.getResources(), R.drawable.honey1);
 			bmNoHoney = BitmapFactory.decodeResource(view.getResources(), R.drawable.nohoney1);
 			bmBackground = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.main_menu_background);
+			bmBgCost = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.playgame_background_cost);
+			bmButtonMenu = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.playgame_button_menu);
+			bmButtonHelp = BitmapFactory.decodeResource(view.getResources(), R.drawable.main_menu_button_help);
+			
 			bmNumber = new Bitmap[12];
 			bmNumber[0] = BitmapFactory.decodeResource(view.getResources(), R.drawable.num0);
 			bmNumber[1] = BitmapFactory.decodeResource(view.getResources(), R.drawable.num1);
@@ -65,7 +72,7 @@ public class Theme {
 		}
 		
 	}
-
+	
 	public Bitmap getBmFlower() {
 		return bmFlower;
 	}
@@ -126,5 +133,30 @@ public class Theme {
 		this.bmNoHoney = bmNoHoney;
 	}
 
+	public Bitmap getBmBgCost() {
+		return bmBgCost;
+	}
+
+	public void setBmBgCost(Bitmap bmBgCost) {
+		this.bmBgCost = bmBgCost;
+	}
+
+	public Bitmap getBmButtonMenu() {
+		return bmButtonMenu;
+	}
+
+	public void setBmButtonMenu(Bitmap bmButtonMenu) {
+		this.bmButtonMenu = bmButtonMenu;
+	}
+
+	public Bitmap getBmButtonHelp() {
+		return bmButtonHelp;
+	}
+
+	public void setBmButtonHelp(Bitmap bmButtonHelp) {
+		this.bmButtonHelp = bmButtonHelp;
+	}
+
+	
 
 }

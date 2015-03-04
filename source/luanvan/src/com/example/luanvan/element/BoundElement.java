@@ -2,8 +2,8 @@ package com.example.luanvan.element;
 
 public class BoundElement {
 
-	LocationElement location = new LocationElement();
-	SizeElement size = new SizeElement();
+	private LocationElement location = new LocationElement();
+	private SizeElement size = new SizeElement();
 
 	public BoundElement() {
 		// TODO Auto-generated constructor stub
@@ -18,6 +18,13 @@ public class BoundElement {
 	public BoundElement(float x, float y, float width, float height) {
 		location = new LocationElement(x, y);
 		size = new SizeElement(width, height);
+	}
+	
+	public void Import(BoundElement b){
+		location.x = b.getLocationX();
+		location.y = b.getLocationY();
+		size.height = b.getHeight();
+		size.width = b.getWidth();
 	}
 
 	public LocationElement getLocation() {
