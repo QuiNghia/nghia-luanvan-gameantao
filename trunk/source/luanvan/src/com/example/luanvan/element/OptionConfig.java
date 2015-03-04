@@ -12,8 +12,6 @@ public class OptionConfig {
 	public static int MAX_COLUNM = 8;
 	public static int MAX_PER_HONEY = 95;
 	
-	
-	
 	public enum Level {EASY, MEDIUM, DIFFICULT, OPTION};
 	
 	private int row, colunm, perHoney;
@@ -23,9 +21,11 @@ public class OptionConfig {
 	public static int deltaRow(){
 		return MAX_ROW - MIN_ROW;
 	}
+	
 	public static int deltaColunm(){
 		return MAX_COLUNM - MIN_COLUNM;
 	}
+	
 	public static int deltaPerHoney(){
 		return MAX_PER_HONEY - MIN_PER_HONEY;
 	}
@@ -36,40 +36,47 @@ public class OptionConfig {
 		turnOnVolum();
 	}
 	
-	
 	public void setLevelEasy(){
 		level = Level.EASY;
 		row = colunm = 6;
 		perHoney = 95;
 	}
+	
 	public void setLevelMedium(){
 		level = Level.MEDIUM;
 		row = colunm = 6;
 		perHoney = 90;
 	}
+	
 	public void setLevelDifficult(){
 		level = Level.DIFFICULT;
 		row = colunm = 6;
 		perHoney = 85;
 	}
+	
 	public void setLevelOption(int row, int col, int per){
 		level = Level.OPTION;
 		this.row = row;
 		this.colunm = col;
 		this.perHoney = per;
 	}
+	
 	public boolean isLevelEasy(){
 		return level == Level.EASY;
 	}
+	
 	public boolean isLevelMedium(){
 		return level == Level.MEDIUM;
 	}
+	
 	public boolean isLevelDifficult(){
 		return level == Level.DIFFICULT;
 	}
+	
 	public boolean isLevelOption(){
 		return level == Level.OPTION;
 	}
+	
 	public boolean isTurnOffVolum(){
 		return volum == false;
 	}

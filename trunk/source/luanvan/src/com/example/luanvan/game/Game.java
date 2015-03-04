@@ -6,6 +6,8 @@ import com.example.luanvan.GamePanel;
 import com.example.luanvan.GamePlayActivity;
 import com.example.luanvan.element.BoundElement;
 import com.example.luanvan.element.Flower;
+import com.example.luanvan.element.GameAlertDialog;
+import com.example.luanvan.element.GameData;
 import com.example.luanvan.element.LocationElement;
 import com.example.luanvan.element.MyView;
 import com.example.luanvan.element.OptionConfig;
@@ -33,8 +35,8 @@ import android.widget.Toast;
 
 public class Game extends MyView{
 
-	int fps = 20; // so khung hinh tren giay
-	BoundElement boMaxMT,boMtFlower;
+	int fps = 30; // so khung hinh tren giay
+	BoundElement boMaxMT,boMtFlower,boCostBg,boHelp,boMenu;
 	int slHang = 6, slCot = 8,tyleSau = 15;
 	float padding = 3;
 	float sizeCell; 
@@ -42,7 +44,7 @@ public class Game extends MyView{
 	Theme theme;
 	GameData gameData;
 	public boolean running = true;
-	
+	private GameAlertDialog dialogMenu;
 
 //	
 //	public Game(Context context) {
@@ -74,6 +76,9 @@ public class Game extends MyView{
 		setBoundFlower();
 //		theme = new Theme(1,this); ------------
 		theme = new Theme(1,getView());
+		setBound();
+		dialogMenu = new PlaygameMenu(this);
+		dialogMenu.onCreated();
 		thrDraw = new Thread(new Runnable() {
 			
 			@Override
@@ -81,6 +86,7 @@ public class Game extends MyView{
 				// TODO Auto-generated method stub
 				int timeWait = 1000/fps;
 				Canvas cv ;
+				running = true;
 				while(running){
 					cv= getHolder().lockCanvas();
 					if(cv!=null){
@@ -124,6 +130,9 @@ public class Game extends MyView{
 		DrawBackground(c);
 		DrawMatrixFlower(c);
 		DrawInfomation(c);
+		DrawButton(c);
+		if(dialogMenu.isShow())
+			dialogMenu.doDraw(c);
 	}
 	
 	// ve hinh nen
@@ -228,15 +237,51 @@ public class Game extends MyView{
 		}
 		
 	}
+	
+	public void setBound(){
+		Bitmap bm;
+		float x,y,w,h;
+		bm = theme.getBmBgCost();
+		x = 0;
+		y = 0.03f*getHeight();
+		w = 0.4f*getWidth();
+		h = bm.getHeight() * w/bm.getWidth();
+		boCostBg = new BoundElement(x, y, w, h);
+		theme.setBmBgCost(Bitmap.createScaledBitmap(bm,(int)w,(int)h,true));
+		
+		bm = theme.getBmButtonMenu();
+		w = h = (66f/430f)*getHeight();
+		x = getWidth() - w;
+		y = getHeight() - h;
+		boMenu = new BoundElement(x,y,w,h);
+		theme.setBmButtonMenu(Bitmap.createScaledBitmap(bm,(int)w,(int)h,true));
+		
+		bm = theme.getBmButtonHelp();
+		w = h = (66f/430f)*getHeight();
+		x = 0;
+		y = getHeight() - h;
+		boHelp =  new BoundElement(x,y,w,h);
+		theme.setBmButtonHelp(Bitmap.createScaledBitmap(bm,(int)w,(int)h,true));
+	}
 	public void DrawInfomation(Canvas c){
 		Paint paint = new Paint();
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.FILL);
 		paint.setColor(Color.BLUE);
-		paint.setTextSize(20);
+		paint.setTextSize(25);
 		
-		LocationElement loCost = new LocationElement(30,30);
-		c.drawText("COST: " + gameData.getCost(), loCost.x, loCost.y, paint);
+		LocationElement loCost = new LocationElement((boCostBg.getLocationX() + boCostBg.getWidth())/2 
+				,boCostBg.getLocationY() + 0.75f*boCostBg.getHeight());
+		
+		c.drawBitmap(theme.getBmBgCost(), boCostBg.getLocationX(), boCostBg.getLocationY(), paint);
+		c.drawText("" + gameData.getCost(), loCost.x, loCost.y, paint);
+		
+	}
+	
+	public void DrawButton(Canvas c){
+		Paint paint = new Paint();
+		c.drawBitmap(theme.getBmButtonHelp(), boHelp.getLocationX(), boHelp.getLocationY(), paint);
+		c.drawBitmap(theme.getBmButtonMenu(), boMenu.getLocationX(), boMenu.getLocationY(), paint);
 	}
 	
 	public void setEvent(){
@@ -249,6 +294,10 @@ public class Game extends MyView{
 				switch(me){
 					case MotionEvent.ACTION_DOWN:{
 						PointF pClick = new PointF(event.getX(),event.getY());
+						if(boMenu.checkPointIn(pClick.x, pClick.y)){
+							dialogMenu.setShow(true);
+							break;
+						}
 						Point local = getLocationAtCooridate(pClick.x, pClick.y);// lay vi tri bong hoa
 						if(local != null){
 							
@@ -294,6 +343,11 @@ public class Game extends MyView{
 			}
 		
 		return null;
+	}
+	
+	public void rePlay(){
+		running = false;
+		surfaceCreated(getHolder());
 	}
 	
 	public void actionVictory(){

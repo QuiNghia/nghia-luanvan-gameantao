@@ -6,5 +6,19 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="title_activity_game_play">GamePlayActivity</string>
+    <string name="title_activity_sync">SyncActivity</string>
+    <string name="taikhoan">Tài khoản</string>
+    <string name="matkhau">Mật khẩu</string>
+    <string name="dongbotaikhoan">Đồng bộ tài khoản</string>
+    <string name="hint_taikhoan">Nhập tên tài khoản</string>
+    <string name="taotaikhoan">Tôi chưa có tài khoản</string>
+    <string name="quenmatkhau">Quên mật khẩu</string>
+    <string name="sync">Đồng bộ</string>
+    <string name="quaylai">Quay lại</string>
+    <string name="xacnhanlai">Xác nhận lại</string>
+    <string name="xacnhanmatkhau">Nhập lại mật khẩu</string>
+    <string name="Email">Email</string>
+    <string name="nhapemail">Nhập địa chỉ Email</string>
+    <string name="taotaikhoanmoi">Tạo tài khoản mới</string>
 
 </resources>

@@ -4,6 +4,7 @@ import com.example.luanvan.GamePanel;
 import com.example.luanvan.GamePlayActivity;
 import com.example.luanvan.MainActivity;
 import com.example.luanvan.R;
+import com.example.luanvan.SyncActivity;
 import com.example.luanvan.element.BoundElement;
 import com.example.luanvan.element.MyView;
 import com.example.luanvan.element.Sound;
@@ -28,16 +29,16 @@ import android.widget.Toast;
 
 public class MainMenu extends MyView{
 
-	MainMenu myMainMenu;
-	BoundElement boBtnStart, boBtnExit, boBtnSetting, boBtnHelp, boBtnSync, boBee;
-	Thread thrDraw;
-	Bitmap bmBackground, bmBtnStart,bmBtnExit, bmBtnSetting, bmBtnHelp, bmBtnSync;
-	Bitmap bmBee[];
-	GameOption gameOption;
-	int fps = 20, timeDelay; 
-	float width, height;
-	boolean running;
-	int cntBee = 0;
+	private MainMenu myMainMenu;
+	private BoundElement  boBtnStart, boBtnExit, boBtnSetting, boBtnHelp, boBtnSync, boBee;
+	private Thread thrDraw;
+	private Bitmap bmBackground, bmBtnStart,bmBtnExit, bmBtnSetting, bmBtnHelp, bmBtnSync;
+	private Bitmap bmBee[];
+	private GameOption gameOption;
+	private int fps = 20, timeDelay; 
+	private float width, height;
+	private boolean running;
+	private int cntBee = 0;
 	
 //	public MainMenu(Context context) {
 //		super(context);
@@ -51,7 +52,7 @@ public class MainMenu extends MyView{
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		
+	
 	}
 
 	@Override
@@ -60,8 +61,8 @@ public class MainMenu extends MyView{
 		
 		running = true;
 		cntBee = 0;
-		setBoundElement();
 		loadBitmap();
+		setBoundElement();
 		setEvent();
 		gameOption = new GameOption(this);
 		gameOption.onCreated();
@@ -134,56 +135,67 @@ public class MainMenu extends MyView{
 	}
 	
 	public void setBoundElement(){
-		boBtnStart = new BoundElement(getWidth() - 192, getHeight()/2-63-10, 192, 63);
-		boBtnExit = new BoundElement(getWidth() - 192, getHeight()/2 + 10, 192, 63);
-		boBtnSetting = new BoundElement(getWidth() - 66, getHeight()-66, 66, 66);
-		boBtnHelp = new BoundElement(0, getHeight()-66, 66, 66);
-		boBtnSync = new BoundElement(getWidth() - 66, 0, 66, 66);
-		float x = boBtnStart.getLocationX()+ boBtnStart.getWidth()/2 - 0.25f*188;
-		float y = boBtnStart.getLocationY() - 0.5f*175;
-		boBee = new BoundElement(x, y, 188*0.5f,175*0.5f);
+		float x,y,w,h;
+		
+		bmBackground = Bitmap.createScaledBitmap(bmBackground, getWidth(), getHeight(), true);
+		
+		w = getWidth() * 150f/320f;
+		h = w/bmBtnStart.getWidth() * bmBtnStart.getHeight();
+		x = getWidth() - w;
+		y =  getHeight()/2 - h - 10f;
+		boBtnStart = new BoundElement(x,y, w, h);
+		bmBtnStart = Bitmap.createScaledBitmap(bmBtnStart, (int)w, (int)h, true);
+		
+		y = getHeight()/2f + 10f;
+		boBtnExit = new BoundElement(x, y, w, h);
+		bmBtnExit = Bitmap.createScaledBitmap(bmBtnExit, (int)w, (int)h, true);
+		
+		w = h = 66f/320f * getWidth();
+		x = getWidth() - w;
+		y = getHeight() - 66;
+		boBtnSetting = new BoundElement(x, y, w, h);
+		bmBtnSetting = Bitmap.createScaledBitmap(bmBtnSetting, (int)w, (int)h, true);
+		
+		x = 0;
+		boBtnHelp = new BoundElement(x, y, w, h);
+		bmBtnHelp = Bitmap.createScaledBitmap(bmBtnHelp, (int)w, (int)h, true);
+		
+		x = getWidth() - w;
+		y = 0;
+		boBtnSync = new BoundElement(x, y, w, y);
+		bmBtnSync = Bitmap.createScaledBitmap(bmBtnSync, (int)w, (int)h, true);
+		
+		w = 70f/320f*getWidth();
+		h = w/bmBee[0].getWidth() * bmBee[0].getHeight();
+		x = boBtnStart.getLocationX()+ boBtnStart.getWidth()/2 - w/2;
+		y = boBtnStart.getLocationY() - h;
+		boBee = new BoundElement(x, y, w,h);
+		for(int i = 0 ; i < 12 ; i ++){
+			bmBee[i] = Bitmap.createScaledBitmap(bmBee[i], (int)w, (int)h, true);
+		}
 	}
 	
 	public  void loadBitmap(){
 		
-		bmBackground = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_background) 
-				,getWidth(),getHeight(),true);
-		bmBtnExit    = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_thoat)
-				,(int)boBtnExit.getWidth(),(int)boBtnExit.getHeight(),true);
-		bmBtnHelp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_help)
-				,(int)boBtnHelp.getWidth(),(int)boBtnHelp.getHeight(), true);
-		bmBtnSetting = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_setting)
-				,(int) boBtnSetting.getWidth(), (int)boBtnSetting.getHeight(), true);
-		bmBtnStart = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_bat_dau)
-				,(int) boBtnStart.getWidth(), (int)boBtnStart.getHeight(), true);
-		bmBtnSync = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_syns)
-				,(int) boBtnSync.getWidth(), (int) boBtnSync.getHeight(), true);
-		bmBee = new Bitmap[12];
-		
-		bmBee[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee1)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee2)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee3)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee4)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee5)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[5] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee6)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[6] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee7)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[7] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee8)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[8] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee9)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[9] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee10)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[10] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee11)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
-		bmBee[11] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee12)
-				,(int) boBee.getWidth(), (int) boBee.getHeight(), true);
+		bmBackground = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_background);
+		bmBtnExit    = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_thoat);
+		bmBtnHelp    = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_help);
+		bmBtnSetting = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_setting);
+		bmBtnStart   = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_bat_dau);
+		bmBtnSync    = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_button_syns);
+		bmBee        = new Bitmap[12];
+		bmBee[0]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee1);
+		bmBee[1]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee2);
+		bmBee[2]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee3);
+		bmBee[3]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee4);
+		bmBee[4]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee5);
+		bmBee[5]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee6);
+		bmBee[6]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee7);
+		bmBee[7]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee8);
+		bmBee[8]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee9);
+		bmBee[9]     = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee10);
+		bmBee[10]    = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee11);
+		bmBee[11]    = BitmapFactory.decodeResource(getResources(), R.drawable.main_menu_chibi_bee12);
 		
 	}
 	
@@ -233,6 +245,8 @@ public class MainMenu extends MyView{
 				}
 				else if(boBtnSync.checkPointIn(x, y)){
 					//dang nhap
+					Intent i = new Intent(getView().getContext(), GamePlayActivity.class);
+					getView().getContext().startActivity(i);
 				}
 				else kt = false;
 				

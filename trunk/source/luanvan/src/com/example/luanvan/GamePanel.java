@@ -3,6 +3,7 @@ package com.example.luanvan;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import com.example.luanvan.element.MyView;
 import com.example.luanvan.element.Sound;
@@ -22,6 +23,7 @@ public class GamePanel extends ViewPanel{
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		// TODO Auto-generated method stub
+		
 		view.surfaceChanged(holder, format, width, height);
 	}
 
