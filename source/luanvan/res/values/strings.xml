@@ -20,5 +20,6 @@
     <string name="Email">Email</string>
     <string name="nhapemail">Nhập địa chỉ Email</string>
     <string name="taotaikhoanmoi">Tạo tài khoản mới</string>
+    <string name="title_activity_register">RegisterActivity</string>
 
 </resources>
