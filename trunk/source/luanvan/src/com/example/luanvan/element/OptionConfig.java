@@ -8,8 +8,8 @@ public class OptionConfig {
 	public static int MIN_COLUNM = 5;
 	public static int MIN_PER_HONEY = 70;
 	
-	public static int MAX_ROW = 8;
-	public static int MAX_COLUNM = 8;
+	public static int MAX_ROW = 12;
+	public static int MAX_COLUNM = 12;
 	public static int MAX_PER_HONEY = 95;
 	
 	public enum Level {EASY, MEDIUM, DIFFICULT, OPTION};

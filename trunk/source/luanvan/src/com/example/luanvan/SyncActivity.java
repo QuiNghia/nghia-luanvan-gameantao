@@ -1,10 +1,21 @@
 package com.example.luanvan;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
+import android.provider.DocumentsContract.Document;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SyncActivity extends Activity {
 
@@ -12,6 +23,9 @@ public class SyncActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sync);
+		setEvent();
+		
+		
 	}
 
 	@Override
@@ -32,4 +46,38 @@ public class SyncActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public void setEvent(){
+		Button btnBack = (Button) findViewById(R.id.btnBackSync);
+		Button btnSync = (Button) findViewById(R.id.btnSync);
+		TextView tvTaoTk = (TextView) findViewById(R.id.tvTaotaikhoan);
+		
+		btnBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
+		btnSync.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getBaseContext(), "Chức năng chưa hoàn thành!", Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		tvTaoTk.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getBaseContext(), RegisterActivity.class);
+				startActivity(i);
+			}
+		});
+
+	}
+	
+
 }

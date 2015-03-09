@@ -152,7 +152,7 @@ public class MainMenu extends MyView{
 		
 		w = h = 66f/320f * getWidth();
 		x = getWidth() - w;
-		y = getHeight() - 66;
+		y = getHeight() - h;
 		boBtnSetting = new BoundElement(x, y, w, h);
 		bmBtnSetting = Bitmap.createScaledBitmap(bmBtnSetting, (int)w, (int)h, true);
 		
@@ -162,7 +162,7 @@ public class MainMenu extends MyView{
 		
 		x = getWidth() - w;
 		y = 0;
-		boBtnSync = new BoundElement(x, y, w, y);
+		boBtnSync = new BoundElement(x, y, w, h);
 		bmBtnSync = Bitmap.createScaledBitmap(bmBtnSync, (int)w, (int)h, true);
 		
 		w = 70f/320f*getWidth();
@@ -245,11 +245,11 @@ public class MainMenu extends MyView{
 				}
 				else if(boBtnSync.checkPointIn(x, y)){
 					//dang nhap
-					Intent i = new Intent(getView().getContext(), GamePlayActivity.class);
-					getView().getContext().startActivity(i);
+					((MainActivity)getContext()).startActivitySync();
+					
 				}
 				else kt = false;
-				
+				//Toast.makeText(getContext(), boBtnSync.toString() + "\n"+x+","+y, Toast.LENGTH_LONG).show();
 				if(kt)
 					Sound.mySound.playMusicButton();
 				

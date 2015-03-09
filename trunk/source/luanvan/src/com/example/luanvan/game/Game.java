@@ -38,14 +38,16 @@ public class Game extends MyView{
 	int fps = 30; // so khung hinh tren giay
 	BoundElement boMaxMT,boMtFlower,boCostBg,boHelp,boMenu;
 	int slHang = 6, slCot = 8,tyleSau = 15;
-	float padding = 3;
+	int time;
+	float padding = 1;
 	float sizeCell; 
 	Thread thrDraw;
+	ThreadTime thrTime;
 	Theme theme;
 	GameData gameData;
 	public boolean running = true;
 	private GameAlertDialog dialogMenu;
-
+	
 //	
 //	public Game(Context context) {
 //		super(context);
@@ -73,12 +75,15 @@ public class Game extends MyView{
 		
 		gameData = new GameData();
 		gameData.createNew(slHang, slCot, tyleSau);
-		setBoundFlower();
+		
 //		theme = new Theme(1,this); ------------
 		theme = new Theme(1,getView());
 		setBound();
+		setBoundFlower();
 		dialogMenu = new PlaygameMenu(this);
 		dialogMenu.onCreated();
+		thrTime = new ThreadTime(this);
+		thrTime.startTime();
 		thrDraw = new Thread(new Runnable() {
 			
 			@Override
@@ -102,6 +107,7 @@ public class Game extends MyView{
 			}
 		});
 		thrDraw.start();
+		
 		setEvent();
 		
 		
@@ -113,9 +119,10 @@ public class Game extends MyView{
 		if(thrDraw != null && thrDraw.isAlive() ){
 			running = false;
 			//thrDraw.stop();
-			
 		}
-			
+		if(thrTime != null){
+			thrTime.stopTime();
+		}
 	}
 							
 	@Override
@@ -214,9 +221,9 @@ public class Game extends MyView{
 		boMaxMT = new BoundElement();
 		boMtFlower = new BoundElement();
 		boMaxMT.getSize().setWidth( getWidth() - 20 );
-		boMaxMT.getSize().setHeight( getHeight()/2 );
+		boMaxMT.getSize().setHeight( boHelp.getLocationY() - (boCostBg.getLocationY() + boCostBg.getHeight())- 20);
 		boMaxMT.getLocation().set( (getWidth() - boMaxMT.getWidth() )/2
-				, (getHeight() - boMaxMT.getHeight())/2);
+				, boCostBg.getLocationY() + boCostBg.getHeight() + 10);
 		
 		float hCell = boMaxMT.getHeight()/slHang;
 		float wCell = boMaxMT.getWidth()/slCot;
@@ -270,11 +277,16 @@ public class Game extends MyView{
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(25);
 		
+		//ve diem
 		LocationElement loCost = new LocationElement((boCostBg.getLocationX() + boCostBg.getWidth())/2 
 				,boCostBg.getLocationY() + 0.75f*boCostBg.getHeight());
 		
 		c.drawBitmap(theme.getBmBgCost(), boCostBg.getLocationX(), boCostBg.getLocationY(), paint);
 		c.drawText("" + gameData.getCost(), loCost.x, loCost.y, paint);
+		//ve thoi gian
+		LocationElement loTime = new LocationElement(loCost.x + getView().getWidth()/2,loCost.y );
+		c.drawText(String.format("%02d:%02d",  thrTime.getTime()/60,thrTime.getTime()%60)
+				, loTime.x, loTime.y, paint); ;
 		
 	}
 	
@@ -347,19 +359,27 @@ public class Game extends MyView{
 	
 	public void rePlay(){
 		running = false;
+		
 		surfaceCreated(getHolder());
 	}
 	
 	public void actionVictory(){
+		thrTime.stopTime();
 		Toast.makeText(getContext(), "Victory!", Toast.LENGTH_LONG).show();
 		((GamePanel)getView()).startPanelMainMenu();
 	}
 
 	public void actionGameOver(){
 		//gameData.createNew(slHang, slCot, tyleSau);
-		Toast.makeText(getContext(), "GameOver!", Toast.LENGTH_LONG).show();
+		thrTime.stopTime();
+		Toast.makeText(getView().getContext(), "GameOver!", Toast.LENGTH_LONG).show();
 //		Intent i = new Intent(getContext(), GamePlayActivity.class);
 //		getContext().startActivity(i);
 		((GamePanel)getView()).startPanelMainMenu();
 	}
+	public void actionTimeOver(){
+		thrTime.stopTime();
+		((GamePanel)getView()).startPanelMainMenu();
+	}
 }
+
